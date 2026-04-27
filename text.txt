@@ -1,0 +1,19 @@
+statefull:-which maintain the data on server side
+
+statefull:-which has no statef
+
+
+express Flow
+
+client---->Auth Middleware---->endpoint route
+Auth middleware:-check for cookie value or uid ,if valid calls next() else reject the request
+
+
+installations
+mongoose
+.env
+express
+bcrypt
+
+cloudinary
+multer
