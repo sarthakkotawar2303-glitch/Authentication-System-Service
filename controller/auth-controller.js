@@ -7,10 +7,10 @@ const Image = require("../model/Image");
 // Register controller
 const registerUser = async (req, res) => {
     try {
-        const { username, email, password, role } = req.body;
+        const { username, email, password,mobileNo, role } = req.body;
 
         // Check if user already exists
-        const checkExistUser = await User.findOne({ $or: [{ username }, { email }] });
+        const checkExistUser = await User.findOne({ $or: [{ mobileNo }, { email }] });
         if (checkExistUser) {
             return res.status(400).json({
                 success: false,
@@ -26,6 +26,7 @@ const registerUser = async (req, res) => {
         const newUser = new User({
             username,
             email,
+            mobileNo,
             password: hashedPassword,
             role: role || "user",
         });
@@ -48,10 +49,10 @@ const registerUser = async (req, res) => {
 // Login controller
 const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { mobileNo,email,password } = req.body;
 
         // Find user by email
-        const user = await User.findOne({ email });
+        const user = await User.findOne({$or:[{mobileNo},{email}] });
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -113,7 +114,7 @@ const changePassword = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "user not found",
-            });
+            });3
         }
         //taking old and new password from the user
         const { oldPassword, newPassword } = req.body;
