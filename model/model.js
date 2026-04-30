@@ -17,13 +17,35 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        minlength: 10,
-        maxlength: 10,
-        trim: true
+        trim: true,
+        validate: {
+            validator: (v) => /^[0-9]{10}$/.test(v),
+            message: "Mobile number must be exactly 10 digit"
+        }
     },
     password: {
         type: String,
         required: true
+    },
+    resetOtp: {
+        type: String,
+        default: null
+    },
+    otpExpiry: {
+        type: Date,
+        default: null
+    },
+    otpVerified: {
+        type: Boolean,
+        default: false
+    },
+    resetToken:{
+        type:String,
+        default:null
+    },
+    resetTokenExpiry:{
+        type:Date,
+        default:null
     },
     role: {
         type: String,
@@ -32,4 +54,5 @@ const UserSchema = new mongoose.Schema({
     }
 }, { timestamps: true })
 
-module.exports = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', UserSchema)
+module.exports = { User }

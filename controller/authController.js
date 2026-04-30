@@ -1,13 +1,10 @@
 const User = require("../model/model");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
-const cloudinary = require("../config/cloudinary");
-const Image = require("../model/Image");
-
 // Register controller
 const registerUser = async (req, res) => {
     try {
-        const { username, email, password,mobileNo, role } = req.body;
+        const { username, email, password, mobileNo, role } = req.body;
 
         // Check if user already exists
         const checkExistUser = await User.findOne({ $or: [{ mobileNo }, { email }] });
@@ -49,10 +46,10 @@ const registerUser = async (req, res) => {
 // Login controller
 const loginUser = async (req, res) => {
     try {
-        const { mobileNo,email,password } = req.body;
+        const { mobileNo, email, password } = req.body;
 
         // Find user by email
-        const user = await User.findOne({$or:[{mobileNo},{email}] });
+        const user = await User.findOne({ $or: [{ mobileNo }, { email }] });
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -114,7 +111,7 @@ const changePassword = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "user not found",
-            });3
+            }); 3
         }
         //taking old and new password from the user
         const { oldPassword, newPassword } = req.body;
@@ -148,43 +145,6 @@ const changePassword = async (req, res) => {
     }
 }
 
-const deleteImageController = async (req, res) => {
-    try {
-        const getCurrentIdOfImageForDelete = req.params.id
-        const userId = req.userInfo.userId
-
-        const image = await Image.findById(getCurrentIdOfImageForDelete)
-        if (!image) {
-            return res.status(401).json({
-                success: false,
-                message: "image is not present"
-            })
-        }
-        if (image.uploadedBy.toString() !== userId) {
-            return res.status(403).json({
-                success: false,
-                message: "You are not authorized to delete this image"
-            })
-        }
-
-        //deleting the image from the cloudinary
-        await cloudinary.uploader.destroy(image.publicId)
-
-        //deleting the image from the mongoDb
-        await Image.findByIdAndDelete(getCurrentIdOfImageForDelete)
-        return res.status(200).json({
-            success: true,
-            message: "Image delete Successfully"
-        })
-
-    } catch (error) {
-        return res.status(400).json({
-            success: false,
-            message: "Error occurs during changing the password",
-        });
-    }
 
 
-}
-
-module.exports = { registerUser, loginUser, changePassword, deleteImageController };
+module.exports = { registerUser, loginUser, changePassword};

@@ -4,6 +4,7 @@ const connectToDb = require('./db/db')
 const authroutes = require("./router/router")
 const homeroutes = require('./router/home-routes')
 const adminroutes = require('./router/admin')
+const cookieParser = require("cookie-parser")
 
 
 const app = express();
@@ -13,6 +14,7 @@ connectToDb()
 
 //midleware
 app.use(express.json())
+app.use(cookieParser)
 
 
 app.use('/api/auth', authroutes)
