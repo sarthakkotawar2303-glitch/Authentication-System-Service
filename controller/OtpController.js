@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const { User } = require('../model/model');
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+const sendSms = require('../utils/sendSms');
+const sendEmail = require('../utils/sendEmail');
 
 
 const optGenerator = () => {
@@ -61,7 +63,11 @@ const forgotPassword = async (req, res) => {
         user.resetTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
         await user.save()
 
-        console.log("OTP", otp)
+        if(type==="email"){
+            await sendEmail(identifier,otp)
+        }else{
+            await sendSms(identifier,otp)
+        }
 
         res.cookie('resetToken', resetToken, cookieOptions)
 

@@ -1,4 +1,4 @@
-const User = require("../model/model");
+const {User} = require("../model/model");
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 // Register controller
@@ -111,7 +111,7 @@ const changePassword = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "user not found",
-            }); 3
+            }); 
         }
         //taking old and new password from the user
         const { oldPassword, newPassword } = req.body;
